@@ -48,7 +48,7 @@ void setup() {
      "Button 2: " + String(button2Data) + "\n" +
      "Button 3: " + String(button3Data) + "\n" +
      "Button 4: " + String(button4Data) + "\n" +
-     "Button 5: " + String(button1Data) + "\n";    
+     "Button 5: " + String(button5Data) + "\n";    
 
     request->send(200, "text/plain", response);
   });
