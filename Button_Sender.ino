@@ -1,7 +1,7 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
-//THE RECEIVER'S MAC Address
+//RECEIVERENS MAC Address
 uint8_t broadcastAddress[] = {0x88,0x57,0x21,0x79,0x94,0x74};
 
 int buttonPin1 = 5;
@@ -75,5 +75,4 @@ void loop() {
   else {
     Serial.println("Error sending the data");
   }
-  delay(10000);
 }
