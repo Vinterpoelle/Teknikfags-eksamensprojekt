@@ -1,59 +1,67 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
-//RECEIVERENS MAC Address
+//Recieverens MAC addresse
 uint8_t broadcastAddress[] = {0x88,0x57,0x21,0x79,0x94,0x74};
 
+//Knappernes pin-setup
 int buttonPin1 = 5;
 int buttonPin2 = 18;
+int buttonPin3 = 21;
+int buttonPin4 = 22;
+int buttonPin5 = 33;
 
-// Structure example to send data
-// Must match the receiver structure
+//Struktur med variabler, der kan sendes til recieveren
 typedef struct struct_message {
-    int id; // must be unique for each sender board
+    int id; //Den er unik for hver sender med ESP NOW
     int button1Data = 0;
     int button2Data = 0;
+    int button3Data = 0;
+    int button4Data = 0;
+    int button5Data = 0;
 } struct_message;
 
-// Create a struct_message called myData
+//Strukturen bliver gemt i variablen myData
 struct_message myData;
 
-// Create peer interface
+//Laver variabel til at gemme paringsenhedens data
 esp_now_peer_info_t peerInfo;
 
-// callback when data is sent
+//Callback funktion når data er sendt, som giver besked om det lykkedes eller ej
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   Serial.print("\r\nLast Packet Send Status:\t");
   Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
 }
  
 void setup() {
-  // Init Serial Monitor
+  //Initialiser Serial Monitor
   Serial.begin(115200);
 
-  // Set device as a Wi-Fi Station
+  //Sæt den som en Wi-Fi Station
   WiFi.mode(WIFI_STA);
 
   //Knapperne sat til at være INPUTS
   pinMode(buttonPin1,INPUT_PULLUP);
   pinMode(buttonPin2,INPUT_PULLUP);
+  pinMode(buttonPin3,INPUT_PULLUP);
+  pinMode(buttonPin4,INPUT_PULLUP);
+  pinMode(buttonPin5,INPUT_PULLUP);
 
-  // Init ESP-NOW
+  //Initialiser ESP-NOW
   if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
     return;
   }
 
-  // Once ESPNow is successfully Init, we will register for Send CB to
-  // get the status of Trasnmitted packet
+  //Når ESP NOW er successfuldt initialiseret, registrer callback funktionen, der sendes
   esp_now_register_send_cb(esp_now_send_cb_t(OnDataSent));
   
-  // Register peer
+  //Registrer paringsenheden
   memcpy(peerInfo.peer_addr, broadcastAddress, 6);
   peerInfo.channel = 0;  
   peerInfo.encrypt = false;
   
-  // Add peer        
+  //Tilføj paringsenheden, så det er den reciever, der bliver parret med
   if (esp_now_add_peer(&peerInfo) != ESP_OK){
     Serial.println("Failed to add peer");
     return;
@@ -61,18 +69,34 @@ void setup() {
 }
  
 void loop() {
-  //Set values to send
+  //Det der sendes
   myData.id = 1;
   myData.button1Data = digitalRead(buttonPin1);
   myData.button2Data = digitalRead(buttonPin2);
+  myData.button3Data = digitalRead(buttonPin3);
+  myData.button4Data = digitalRead(buttonPin4);
+  myData.button5Data = digitalRead(buttonPin5);
 
-  // Send message via ESP-NOW
+  //Send beskeden via ESP NOW
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
    
+   //Print data i egen konsol
+   Serial.print(myData.button1Data);
+   Serial.print(",");
+   Serial.print(myData.button2Data);
+   Serial.print(" ");
+   Serial.print(myData.button3Data);
+   Serial.print(",");
+   Serial.print(myData.button4Data);
+   Serial.print(" ");
+   Serial.print(myData.button5Data);
+   Serial.print(" ");
+
   if (result == ESP_OK) {
     Serial.println("Sent with success");
   }
   else {
     Serial.println("Error sending the data");
   }
+  delay(25);
 }
