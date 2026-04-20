@@ -201,6 +201,8 @@ void button3(){
   pixels.setPixelColor(11, pixels.Color(0, 0, 0));
   pixels.setPixelColor(15, pixels.Color(0, 0, 0));
   pixels.setPixelColor(12, pixels.Color(0, 0, 0));
+
+  pixels.show();
 }
 
 //Knap 4's funktion
@@ -217,6 +219,8 @@ void button4(){
   pixels.setPixelColor(1, pixels.Color(0, 0, 0));
   pixels.setPixelColor(5, pixels.Color(0, 0, 0));
   pixels.setPixelColor(7, pixels.Color(0, 0, 0));
+
+  pixels.show();
 }
 
 //Knap 5's funktion
@@ -227,4 +231,6 @@ void button5(){
   pixels.setPixelColor(15, pixels.Color(128, 0, 0));
   pixels.setPixelColor(16, pixels.Color(128, 0, 0));
   pixels.setPixelColor(11, pixels.Color(128, 0, 0));
+
+  pixels.show();
 }
