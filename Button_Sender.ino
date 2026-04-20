@@ -5,11 +5,11 @@
 uint8_t broadcastAddress[] = {0x88,0x57,0x21,0x79,0x94,0x74};
 
 //Knappernes pin-setup
-int buttonPin1 = 5;
-int buttonPin2 = 18;
-int buttonPin3 = 21;
-int buttonPin4 = 22;
-int buttonPin5 = 33;
+int buttonPin1 = 23;
+int buttonPin2 = 19;
+int buttonPin3 = 26;
+int buttonPin4 = 21;
+int buttonPin5 = 39;
 
 //Struktur med variabler, der kan sendes til recieveren
 typedef struct struct_message {
@@ -45,7 +45,7 @@ void setup() {
   pinMode(buttonPin2,INPUT_PULLUP);
   pinMode(buttonPin3,INPUT_PULLUP);
   pinMode(buttonPin4,INPUT_PULLUP);
-  pinMode(buttonPin5,INPUT_PULLUP);
+  pinMode(buttonPin5,INPUT);
 
   //Initialiser ESP-NOW
   if (esp_now_init() != ESP_OK) {
