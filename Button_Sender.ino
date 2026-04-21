@@ -5,11 +5,11 @@
 uint8_t broadcastAddress[] = {0x88,0x57,0x21,0x79,0x94,0x74};
 
 //Knappernes pin-setup
-int buttonPin1 = 23;
-int buttonPin2 = 19;
-int buttonPin3 = 35;
-int buttonPin4 = 26;
-int buttonPin5 = 21;
+int buttonPin1 = 23; //Kan ændres ift. hvilken pin
+int buttonPin2 = 19; //Kan ændres ift. hvilken pin
+int buttonPin3 = 35; //Kan ændres ift. hvilken pin
+int buttonPin4 = 26; //Kan ændres ift. hvilken pin
+int buttonPin5 = 21; //Kan ændres ift. hvilken pin
 
 //Struktur med variabler, der kan sendes til recieveren
 typedef struct struct_message {
@@ -40,7 +40,7 @@ void setup() {
   //Sæt den som en Wi-Fi Station
   WiFi.mode(WIFI_STA);
 
-  //Knapperne sat til at være INPUTS
+  //Knapperne sat til at være INPUTS_PULLUP og en med PULLUP
   pinMode(buttonPin1,INPUT_PULLUP);
   pinMode(buttonPin2,INPUT_PULLUP);
   pinMode(buttonPin3,INPUT);
@@ -70,7 +70,7 @@ void setup() {
  
 void loop() {
   //Det der sendes
-  myData.id = 2;
+  myData.id = 2; //Ændre til hvilken sender det er. Det er enten 1 eller 2
   myData.button1Data = digitalRead(buttonPin1);
   myData.button2Data = digitalRead(buttonPin2);
   myData.button3Data = digitalRead(buttonPin3);
