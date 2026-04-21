@@ -7,9 +7,9 @@ uint8_t broadcastAddress[] = {0x88,0x57,0x21,0x79,0x94,0x74};
 //Knappernes pin-setup
 int buttonPin1 = 23;
 int buttonPin2 = 19;
-int buttonPin3 = 26;
-int buttonPin4 = 21;
-int buttonPin5 = 39;
+int buttonPin3 = 35;
+int buttonPin4 = 26;
+int buttonPin5 = 21;
 
 //Struktur med variabler, der kan sendes til recieveren
 typedef struct struct_message {
@@ -43,9 +43,9 @@ void setup() {
   //Knapperne sat til at være INPUTS
   pinMode(buttonPin1,INPUT_PULLUP);
   pinMode(buttonPin2,INPUT_PULLUP);
-  pinMode(buttonPin3,INPUT_PULLUP);
+  pinMode(buttonPin3,INPUT);
   pinMode(buttonPin4,INPUT_PULLUP);
-  pinMode(buttonPin5,INPUT);
+  pinMode(buttonPin5,INPUT_PULLUP);
 
   //Initialiser ESP-NOW
   if (esp_now_init() != ESP_OK) {
@@ -70,7 +70,7 @@ void setup() {
  
 void loop() {
   //Det der sendes
-  myData.id = 1;
+  myData.id = 2;
   myData.button1Data = digitalRead(buttonPin1);
   myData.button2Data = digitalRead(buttonPin2);
   myData.button3Data = digitalRead(buttonPin3);
@@ -98,5 +98,5 @@ void loop() {
   else {
     Serial.println("Error sending the data");
   }
-  delay(25);
+  delay(1000);
 }
