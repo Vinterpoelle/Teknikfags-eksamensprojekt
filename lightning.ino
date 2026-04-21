@@ -1,0 +1,454 @@
+#include <esp_now.h>
+#include <WiFi.h>
+
+//NeoPixel
+#include <Adafruit_NeoPixel.h>
+#define PIN       5
+#define NUMPIXELS 17
+Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+//NeoPixel2
+#define PIN2       18
+#define NUMPIXELS2 30
+Adafruit_NeoPixel pixels2(NUMPIXELS2, PIN2, NEO_GRB + NEO_KHZ800);
+
+uint32_t color1 = pixels.Color(0,0,0);
+uint32_t color2 = pixels.Color(64,0,0);
+uint32_t color3 = pixels.Color(0,0,64);
+
+bool start1 = 1;
+
+// Structure example to receive data
+// Must match the sender structure
+typedef struct struct_message {
+  int id;
+  int button1Data = 0;
+  int button2Data = 0;
+  int button3Data = 0;
+  int button4Data = 0;
+  int button5Data = 0;
+  
+}struct_message;
+
+// Create a struct_message called myData
+struct_message myData;
+
+// Create a structure to hold the readings from each board
+struct_message board1;
+struct_message board2;
+struct_message board3;
+
+// Create an array with all the structures
+struct_message boardsStruct[3] = {{board1}, {board2}, {board3}};
+
+bool button1Pressed = 0;
+bool button2Pressed = 0;
+bool button3Pressed = 0;
+bool button4Pressed = 0;
+bool button5Pressed = 0;
+
+//consol2 knapper
+bool button6Pressed = 0;
+bool button7Pressed = 0;
+bool button8Pressed = 0;
+bool button9Pressed = 0;
+bool button10Pressed = 0;
+
+
+// callback function that will be executed when data is received
+void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) {
+  char macStr[18];
+  Serial.print("Packet received from: ");
+  snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
+           mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4], mac_addr[5]);
+  Serial.println(macStr);
+  memcpy(&myData, incomingData, sizeof(myData));
+  Serial.printf("Board ID %u: %u bytes\n", myData.id, len);
+
+  
+  // Update the structures with the new incoming data
+  boardsStruct[myData.id-1].button1Data = myData.button1Data;
+  boardsStruct[myData.id-1].button2Data = myData.button2Data;
+  boardsStruct[myData.id-1].button3Data = myData.button3Data;
+  boardsStruct[myData.id-1].button4Data = myData.button4Data;
+  boardsStruct[myData.id-1].button5Data = myData.button5Data;
+  // update secound
+  boardsStruct[myData.id-1].button1Data = myData.button1Data;
+  boardsStruct[myData.id-1].button2Data = myData.button2Data;
+  boardsStruct[myData.id-1].button3Data = myData.button3Data;
+  boardsStruct[myData.id-1].button4Data = myData.button4Data;
+  boardsStruct[myData.id-1].button5Data = myData.button5Data;
+
+
+  Serial.printf("Button 1: %d \n", boardsStruct[myData.id-1].button1Data);
+  Serial.printf("Button 2: %d \n", boardsStruct[myData.id-1].button2Data);
+  Serial.printf("Button 3: %d \n", boardsStruct[myData.id-1].button3Data);
+  Serial.printf("Button 4: %d \n", boardsStruct[myData.id-1].button4Data);
+  Serial.printf("Button 5: %d \n", boardsStruct[myData.id-1].button5Data);
+
+  Serial.printf("Button 6: %d \n", boardsStruct[myData.id-1].button1Data);
+  Serial.printf("Button 7: %d \n", boardsStruct[myData.id-1].button2Data);
+  Serial.printf("Button 8: %d \n", boardsStruct[myData.id-1].button3Data);
+  Serial.printf("Button 9: %d \n", boardsStruct[myData.id-1].button4Data);
+  Serial.printf("Button 10: %d \n", boardsStruct[myData.id-1].button5Data);
+
+  Serial.println();
+}
+ 
+void setup() {
+  //Initialize Serial Monitor
+  Serial.begin(115200);
+
+  pixels.begin();
+  pixels2.begin();
+
+  //Set device as a Wi-Fi Station
+  WiFi.mode(WIFI_STA);
+
+  //Init ESP-NOW
+  if (esp_now_init() != ESP_OK) {
+    Serial.println("Error initializing ESP-NOW");
+    return;
+  }
+  
+  // Once ESPNow is successfully Init, we will register for recv CB to
+  // get recv packer info
+  esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
+
+  
+}
+ 
+void loop() {
+  // Acess the variables for each board
+  int board1X = boardsStruct[0].button1Data;
+  int board1Y = boardsStruct[0].button2Data;
+  int board1Z = boardsStruct[0].button3Data;
+  int board1W = boardsStruct[0].button4Data;
+  int board1Q = boardsStruct[0].button5Data;
+
+  int board2X = boardsStruct[1].button1Data;
+  int board2Y = boardsStruct[1].button2Data;
+  int board2Z = boardsStruct[1].button3Data;
+  int board2W = boardsStruct[1].button4Data;
+  int board2Q = boardsStruct[1].button5Data;
+  
+  if(start1 == 1){
+   start();
+  }
+
+//button things
+  if(board1X == 1 && button1Pressed == 0) {
+    button1Pressed = 1;
+    button1();
+  }
+
+  if(board1Y == 1 && button2Pressed == 0) {
+    button2Pressed = 1;
+    button2();
+  }
+
+  if(board1Z == 1 && button3Pressed == 0) {
+    button3Pressed = 1;
+    button3();
+  }
+
+  if(board1W == 1 && button4Pressed == 0) {
+    button4Pressed = 1;
+    button4();
+  }
+
+  if(board1Q == 1 && button5Pressed == 0) {
+    button5Pressed = 1;
+    button5();
+  }
+
+if(board2X == 1 && button6Pressed == 0) {
+    button6Pressed = 1;
+    button6();
+  }
+
+  if(board2Y == 1 && button7Pressed == 0) {
+    button7Pressed = 1;
+    button7();
+  }
+
+  if(board2Z == 1 && button8Pressed == 0) {
+    button8Pressed = 1;
+    button8();
+  }
+
+  if(board2W == 1 && button9Pressed == 0) {
+    button9Pressed = 1;
+    button9();
+  }
+
+  if(board2Q == 1 && button10Pressed == 0) {
+    button10Pressed = 1;
+    button10();
+  }
+
+
+  if(board1X == 0) {
+    button1Pressed = 0;
+    start1 = 0;
+  }
+
+  if(board1Y == 0) {
+    button2Pressed = 0;
+    start1 = 0;
+  }
+
+  if(board1Z == 0) {
+    button3Pressed = 0;
+    start1 = 0;
+  }
+
+  if(board1W == 0) {
+    button4Pressed = 0;
+    start1 = 0;
+  }
+
+  if(board1Q == 0) {
+    button5Pressed = 0;
+    start1 = 0;
+  }
+
+    if(board2X == 0) {
+    button6Pressed = 0;
+    start1 = 0;
+  }
+
+  if(board2Y == 0) {
+    button7Pressed = 0;
+    start1 = 0;
+  }
+
+  if(board2Z == 0) {
+    button8Pressed = 0;
+    start1 = 0;
+  }
+
+  if(board2W == 0) {
+    button9Pressed = 0;
+    start1 = 0;
+  }
+
+  if(board2Q == 0) {
+    button10Pressed = 0;
+    start1 = 0;
+  }
+  delay(500);
+}
+
+void setColour(uint8_t r,uint8_t g, uint8_t b){
+  for(int i=0; i<NUMPIXELS; i++) { //For hver pixel...
+    pixels.setPixelColor(i, color1);
+
+  }
+  for(int i=0; i<NUMPIXELS2; i++) { //For hver pixel...
+    pixels2.setPixelColor(i, color1);
+  }
+}
+
+void start() {
+   for(int i=0; i<=17; i++) { // For each pixel...
+    pixels.setPixelColor(i, color1);
+   
+   }
+   for(int i=0; i<=30; i++) { // For each pixel...
+   
+    pixels2.setPixelColor(i, color1);
+   }
+
+
+  pixels.show();
+  pixels2.show();
+}
+
+void button1(){
+  //Tændt 2,4,8,12,15
+  pixels.setPixelColor(4, color2);
+  pixels.setPixelColor(2, color2);
+  pixels.setPixelColor(8, color2);
+  pixels.setPixelColor(15, color2);
+  pixels.setPixelColor(12, color2);
+
+  //Slukket 11,16
+  pixels.setPixelColor(11, color1);
+  pixels.setPixelColor(16, color1);
+
+  pixels.show();
+}
+void button2(){
+  //Tænder 0,1,9,14
+  pixels.setPixelColor(0, color2);
+  pixels.setPixelColor(1, color2);
+  pixels.setPixelColor(14, color2);
+  pixels.setPixelColor(9, color2);
+
+  //Slukker 4,16
+  pixels.setPixelColor(4, color1);
+  pixels.setPixelColor(16, color1);
+
+  pixels.show();
+}
+
+void button3(){
+  //tænt 1,7,10,14
+  pixels.setPixelColor(1, color2);
+  pixels.setPixelColor(10, color2);
+  pixels.setPixelColor(14, color2);
+   pixels.setPixelColor(7, color2);
+  // slukket 9,11,12,15
+  pixels.setPixelColor(9, color1);
+  pixels.setPixelColor(11, color1);
+  pixels.setPixelColor(15, color1);
+   pixels.setPixelColor(12, color1);
+   pixels.show();
+}
+void button4(){
+  //tænt 6,9,12,13,16
+  pixels.setPixelColor(9, color2);
+  pixels.setPixelColor(16, color2);
+  pixels.setPixelColor(13, color2);
+  pixels.setPixelColor(6, color2);
+  pixels.setPixelColor(12, color2);
+  //slukket 1,5,7,8,11
+  pixels.setPixelColor(8, color1);
+  pixels.setPixelColor(11, color1);
+  pixels.setPixelColor(1, color1);
+  pixels.setPixelColor(5, color1);
+  pixels.setPixelColor(7, color1);
+  pixels.show();
+}
+void button5(){
+  //tænd 3,5,15,16,11
+  pixels.setPixelColor(3, color2);
+  pixels.setPixelColor(5, color2);
+  pixels.setPixelColor(15, color2);
+  pixels.setPixelColor(16, color2);
+  pixels.setPixelColor(11, color2);
+  pixels.show();
+}
+
+//buttons2
+
+void button6()
+{
+  //tænt 1,3,5,8,9,10,14,15,20,22
+  pixels2.setPixelColor(9, color3);
+  pixels2.setPixelColor(20, color3);
+  pixels2.setPixelColor(3, color3);
+  pixels2.setPixelColor(22, color3);
+  pixels2.setPixelColor(5, color3);
+    pixels2.setPixelColor(14, color3);
+  pixels2.setPixelColor(15, color3);
+  //added
+    pixels2.setPixelColor(8, color3);
+  pixels2.setPixelColor(1, color3);
+  pixels2.setPixelColor(10, color3);
+    pixels2.setPixelColor(28, color3);
+  pixels2.setPixelColor(7, color3);
+  pixels2.setPixelColor(8, color3);
+  pixels2.setPixelColor(1, color3);
+  //slukket 0,2,3,4,7,26
+  pixels2.setPixelColor(0, color1);
+  pixels2.setPixelColor(26, color1);
+  pixels2.setPixelColor(2, color1);
+  pixels2.setPixelColor(3, color1);
+  pixels2.setPixelColor(4, color1);
+  pixels2.setPixelColor(7, color1);
+  pixels2.show();
+}
+void button7()
+{
+  //tænt 1,7,8,10,11,13,16,17,18,19,28
+  pixels2.setPixelColor(28, color3);
+  pixels2.setPixelColor(7, color3);
+  pixels2.setPixelColor(8, color3);
+  pixels2.setPixelColor(1, color3);
+  pixels2.setPixelColor(10, color3);
+    pixels2.setPixelColor(11, color3);
+  pixels2.setPixelColor(19, color3);
+  pixels2.setPixelColor(17, color3);
+
+  //added
+    pixels2.setPixelColor(16, color3);
+  pixels2.setPixelColor(13, color3);
+  pixels2.setPixelColor(18, color3);
+   pixels2.setPixelColor(20, color3);
+  pixels2.setPixelColor(3, color3);
+  pixels2.setPixelColor(22, color3);
+  pixels2.setPixelColor(5, color3);
+
+  //slukket 6,9,12,15,16,18,22
+  pixels2.setPixelColor(16, color1);
+  pixels2.setPixelColor(6, color1);
+  pixels2.setPixelColor(12, color1);
+  pixels2.setPixelColor(22, color1);
+  pixels2.setPixelColor(9, color1);
+  pixels2.setPixelColor(15, color1);
+  pixels2.setPixelColor(18, color1);
+  pixels2.show();
+}
+void button8()
+{
+  //tænt 2,12,13,16,18
+  pixels2.setPixelColor(16, color3);
+  pixels2.setPixelColor(13, color3);
+  pixels2.setPixelColor(18, color3);
+  pixels2.setPixelColor(12, color3);
+  pixels2.setPixelColor(2, color3);
+  //slukket 5,10,14,17,20,23,28
+  pixels2.setPixelColor(5, color1);
+  pixels2.setPixelColor(28, color1);
+  pixels2.setPixelColor(10, color1);
+  pixels2.setPixelColor(20, color1);
+  pixels2.setPixelColor(14, color1);
+  pixels2.setPixelColor(17, color1);
+  pixels2.setPixelColor(23, color1);
+  pixels2.show();
+}
+void button9()
+{
+  //tænt 4,21,23,25,26
+  pixels2.setPixelColor(21, color3);
+  pixels2.setPixelColor(4, color3);
+  pixels2.setPixelColor(23, color3);
+  pixels2.setPixelColor(26, color3);
+  pixels2.setPixelColor(25, color3);
+
+//added
+ pixels2.setPixelColor(16, color3);
+  pixels2.setPixelColor(13, color3);
+  pixels2.setPixelColor(18, color3);
+    pixels2.setPixelColor(7, color3);
+  pixels2.setPixelColor(8, color3);
+  pixels2.setPixelColor(1, color3);
+  pixels2.setPixelColor(10, color3);
+    pixels2.setPixelColor(11, color3);
+
+
+  pixels2.show();
+}
+void button10()
+{
+  //tænt 0,6,24,27,29
+  pixels2.setPixelColor(24, color3);
+  pixels2.setPixelColor(27, color3);
+  pixels2.setPixelColor(6, color3);
+  pixels2.setPixelColor(29, color3);
+  pixels2.setPixelColor(0, color3);
+  //slukket 1,8,11,13,19,21,24,25,27,29
+  pixels2.setPixelColor(13, color1);
+  pixels2.setPixelColor(21, color1);
+  pixels2.setPixelColor(8, color1);
+  pixels2.setPixelColor(19, color1);
+  pixels2.setPixelColor(24, color1);
+  pixels2.setPixelColor(25, color1);
+  pixels2.setPixelColor(1, color1);
+  pixels2.setPixelColor(27, color1);
+  pixels2.setPixelColor(11, color1);
+  pixels2.setPixelColor(29, color1);
+  pixels2.show();
+}
