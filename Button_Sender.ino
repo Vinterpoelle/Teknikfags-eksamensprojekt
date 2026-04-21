@@ -40,10 +40,10 @@ void setup() {
   //Sæt den som en Wi-Fi Station
   WiFi.mode(WIFI_STA);
 
-  //Knapperne sat til at være INPUTS_PULLUP og en med PULLUP
+  //Knapperne sat til at være INPUTS_PULLUP
   pinMode(buttonPin1,INPUT_PULLUP);
   pinMode(buttonPin2,INPUT_PULLUP);
-  pinMode(buttonPin3,INPUT);
+  pinMode(buttonPin3,INPUTS_PULLUP);
   pinMode(buttonPin4,INPUT_PULLUP);
   pinMode(buttonPin5,INPUT_PULLUP);
 
