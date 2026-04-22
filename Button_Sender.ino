@@ -43,7 +43,7 @@ void setup() {
   //Knapperne sat til at være INPUTS_PULLUP
   pinMode(buttonPin1,INPUT_PULLUP);
   pinMode(buttonPin2,INPUT_PULLUP);
-  pinMode(buttonPin3,INPUTS_PULLUP);
+  pinMode(buttonPin3,INPUT_PULLUP);
   pinMode(buttonPin4,INPUT_PULLUP);
   pinMode(buttonPin5,INPUT_PULLUP);
 
