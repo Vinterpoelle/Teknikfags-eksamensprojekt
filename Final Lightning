@@ -4,7 +4,7 @@
 //NeoPixel
 #include <Adafruit_NeoPixel.h>
 #define PIN       5
-#define NUMPIXELS 17
+#define NUMPIXELS 30
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 //NeoPixel2
@@ -257,24 +257,31 @@ void button1(){
   pixels.setPixelColor(2, color2);
   pixels.setPixelColor(8, color2);
   pixels.setPixelColor(15, color2);
-  pixels.setPixelColor(12, color2);
+  pixels.setPixelColor(11, color2);
 
   //Slukket 11,16
   pixels.setPixelColor(11, color1);
   pixels.setPixelColor(16, color1);
+    pixels.setPixelColor(17, color1);
+  pixels.setPixelColor(25, color1);
 
   pixels.show();
 }
 void button2(){
   //Tænder 0,1,9,14
-  pixels.setPixelColor(0, color2);
+  pixels.setPixelColor(25, color2);
   pixels.setPixelColor(1, color2);
-  pixels.setPixelColor(14, color2);
+  pixels.setPixelColor(15, color2);
   pixels.setPixelColor(9, color2);
+  pixels.setPixelColor(23, color2);
+    pixels.setPixelColor(4, color2);
+  pixels.setPixelColor(10, color2);
 
   //Slukker 4,16
   pixels.setPixelColor(4, color1);
   pixels.setPixelColor(16, color1);
+  pixels.setPixelColor(10, color1);
+  pixels.setPixelColor(3, color1);
 
   pixels.show();
 }
@@ -283,98 +290,108 @@ void button3(){
   //tænt 1,7,10,14
   pixels.setPixelColor(1, color2);
   pixels.setPixelColor(10, color2);
-  pixels.setPixelColor(14, color2);
-   pixels.setPixelColor(7, color2);
+  pixels.setPixelColor(2, color2);
+   pixels.setPixelColor(8, color2);
+     pixels.setPixelColor(15, color2);
+  pixels.setPixelColor(16, color2);
+      pixels.setPixelColor(22, color2);
+         pixels.setPixelColor(4, color2);
+  pixels.setPixelColor(18, color2);
   // slukket 9,11,12,15
   pixels.setPixelColor(9, color1);
   pixels.setPixelColor(11, color1);
   pixels.setPixelColor(15, color1);
-   pixels.setPixelColor(12, color1);
+  pixels.setPixelColor(24, color1);
+   pixels.setPixelColor(18, color1);
+    pixels.setPixelColor(2, color1);
    pixels.show();
 }
 void button4(){
   //tænt 6,9,12,13,16
   pixels.setPixelColor(9, color2);
   pixels.setPixelColor(16, color2);
-  pixels.setPixelColor(13, color2);
-  pixels.setPixelColor(6, color2);
-  pixels.setPixelColor(12, color2);
-  //slukket 1,5,7,8,11
+  pixels.setPixelColor(17, color2);
+  pixels.setPixelColor(3, color2);
+  pixels.setPixelColor(18, color2);
+  pixels.setPixelColor(22, color2);
+  //slukket 1,4,8,11,23
   pixels.setPixelColor(8, color1);
   pixels.setPixelColor(11, color1);
   pixels.setPixelColor(1, color1);
-  pixels.setPixelColor(5, color1);
-  pixels.setPixelColor(7, color1);
+  pixels.setPixelColor(4, color1);
+  pixels.setPixelColor(23, color1);
   pixels.show();
 }
 void button5(){
-  //tænd 3,5,15,16,11
+  //tænd 2,3,11,15,16,18,22
   pixels.setPixelColor(3, color2);
-  pixels.setPixelColor(5, color2);
+  pixels.setPixelColor(2, color2);
   pixels.setPixelColor(15, color2);
   pixels.setPixelColor(16, color2);
   pixels.setPixelColor(11, color2);
+  pixels.setPixelColor(24, color2);
+    pixels.setPixelColor(9, color2);
+  pixels.setPixelColor(22, color2);
+  pixels.setPixelColor(18, color2);
   pixels.show();
 }
 
+
+
+
+
+
+
+
+
 //buttons2
+
+
+
+
 
 void button6()
 {
   //tænt 1,3,5,8,9,10,14,15,20,22
-  pixels2.setPixelColor(9, color3);
-  pixels2.setPixelColor(20, color3);
+  pixels2.setPixelColor(6, color3);
+  pixels2.setPixelColor(21, color3);
   pixels2.setPixelColor(3, color3);
   pixels2.setPixelColor(22, color3);
   pixels2.setPixelColor(5, color3);
     pixels2.setPixelColor(14, color3);
   pixels2.setPixelColor(15, color3);
-  //added
-    pixels2.setPixelColor(8, color3);
+    pixels2.setPixelColor(4, color3);
   pixels2.setPixelColor(1, color3);
-  pixels2.setPixelColor(10, color3);
-    pixels2.setPixelColor(28, color3);
-  pixels2.setPixelColor(7, color3);
-  pixels2.setPixelColor(8, color3);
-  pixels2.setPixelColor(1, color3);
+  pixels2.setPixelColor(11, color3);
+  pixels2.setPixelColor(2, color3);
   //slukket 0,2,3,4,7,26
-  pixels2.setPixelColor(0, color1);
   pixels2.setPixelColor(26, color1);
-  pixels2.setPixelColor(2, color1);
-  pixels2.setPixelColor(3, color1);
   pixels2.setPixelColor(4, color1);
-  pixels2.setPixelColor(7, color1);
   pixels2.show();
 }
 void button7()
 {
   //tænt 1,7,8,10,11,13,16,17,18,19,28
-  pixels2.setPixelColor(28, color3);
+  pixels2.setPixelColor(27, color3);
   pixels2.setPixelColor(7, color3);
-  pixels2.setPixelColor(8, color3);
   pixels2.setPixelColor(1, color3);
-  pixels2.setPixelColor(10, color3);
+  pixels2.setPixelColor(14, color3);
     pixels2.setPixelColor(11, color3);
-  pixels2.setPixelColor(19, color3);
   pixels2.setPixelColor(17, color3);
-
-  //added
-    pixels2.setPixelColor(16, color3);
-  pixels2.setPixelColor(13, color3);
-  pixels2.setPixelColor(18, color3);
-   pixels2.setPixelColor(20, color3);
+   pixels2.setPixelColor(21, color3);
   pixels2.setPixelColor(3, color3);
+   pixels2.setPixelColor(24, color3);
   pixels2.setPixelColor(22, color3);
   pixels2.setPixelColor(5, color3);
+        pixels2.setPixelColor(13, color3);
 
   //slukket 6,9,12,15,16,18,22
-  pixels2.setPixelColor(16, color1);
   pixels2.setPixelColor(6, color1);
-  pixels2.setPixelColor(12, color1);
-  pixels2.setPixelColor(22, color1);
-  pixels2.setPixelColor(9, color1);
   pixels2.setPixelColor(15, color1);
-  pixels2.setPixelColor(18, color1);
+  pixels2.setPixelColor(23, color1);
+  pixels2.setPixelColor(26, color1);
+  pixels2.setPixelColor(1, color1);
+    pixels2.setPixelColor(13, color1);
   pixels2.show();
 }
 void button8()
@@ -382,17 +399,22 @@ void button8()
   //tænt 2,12,13,16,18
   pixels2.setPixelColor(16, color3);
   pixels2.setPixelColor(13, color3);
-  pixels2.setPixelColor(18, color3);
+  pixels2.setPixelColor(17, color3);
+  pixels2.setPixelColor(24, color3);
   pixels2.setPixelColor(12, color3);
+   pixels2.setPixelColor(3, color3);
   pixels2.setPixelColor(2, color3);
+  pixels2.setPixelColor(27, color3);
+  pixels2.setPixelColor(7, color3);
+  pixels2.setPixelColor(1, color3);
+      pixels2.setPixelColor(13, color3);
   //slukket 5,10,14,17,20,23,28
   pixels2.setPixelColor(5, color1);
-  pixels2.setPixelColor(28, color1);
-  pixels2.setPixelColor(10, color1);
-  pixels2.setPixelColor(20, color1);
+  pixels2.setPixelColor(11, color1);
+  pixels2.setPixelColor(21, color1);
   pixels2.setPixelColor(14, color1);
-  pixels2.setPixelColor(17, color1);
   pixels2.setPixelColor(23, color1);
+   pixels2.setPixelColor(3, color3);
   pixels2.show();
 }
 void button9()
@@ -402,18 +424,7 @@ void button9()
   pixels2.setPixelColor(4, color3);
   pixels2.setPixelColor(23, color3);
   pixels2.setPixelColor(26, color3);
-  pixels2.setPixelColor(25, color3);
-
-//added
- pixels2.setPixelColor(16, color3);
-  pixels2.setPixelColor(13, color3);
-  pixels2.setPixelColor(18, color3);
-    pixels2.setPixelColor(7, color3);
-  pixels2.setPixelColor(8, color3);
-  pixels2.setPixelColor(1, color3);
-  pixels2.setPixelColor(10, color3);
     pixels2.setPixelColor(11, color3);
-
 
   pixels2.show();
 }
@@ -423,18 +434,24 @@ void button10()
   pixels2.setPixelColor(24, color3);
   pixels2.setPixelColor(27, color3);
   pixels2.setPixelColor(6, color3);
-  pixels2.setPixelColor(29, color3);
-  pixels2.setPixelColor(0, color3);
+    pixels2.setPixelColor(17, color3);
+    pixels2.setPixelColor(7, color3);
+  pixels2.setPixelColor(1, color3);
+  pixels2.setPixelColor(22, color3);
+  pixels2.setPixelColor(12, color3);
+        pixels2.setPixelColor(2, color3);
+    pixels2.setPixelColor(3, color3);
+      pixels2.setPixelColor(25, color3);
+ pixels2.setPixelColor(16, color3);
   //slukket 1,8,11,13,19,21,24,25,27,29
   pixels2.setPixelColor(13, color1);
   pixels2.setPixelColor(21, color1);
-  pixels2.setPixelColor(8, color1);
-  pixels2.setPixelColor(19, color1);
+    pixels2.setPixelColor(17, color1);
+  pixels2.setPixelColor(7, color1);
+  pixels2.setPixelColor(13, color1);
   pixels2.setPixelColor(24, color1);
-  pixels2.setPixelColor(25, color1);
+    pixels2.setPixelColor(22, color1);
   pixels2.setPixelColor(1, color1);
-  pixels2.setPixelColor(27, color1);
   pixels2.setPixelColor(11, color1);
-  pixels2.setPixelColor(29, color1);
   pixels2.show();
 }
