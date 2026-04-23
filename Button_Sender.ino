@@ -11,7 +11,7 @@ int buttonPin3 = 35; //Kan ændres ift. hvilken pin
 int buttonPin4 = 26; //Kan ændres ift. hvilken pin
 int buttonPin5 = 21; //Kan ændres ift. hvilken pin
 
-//Struktur med variabler, der kan sendes til recieveren
+//Struktur med variabler til at holde knappernes data
 typedef struct struct_message {
   int button1Data = 0;
   int button2Data = 0;
@@ -20,6 +20,7 @@ typedef struct struct_message {
   int button5Data = 0;
 } struct_message;
 
+//Struktur med variablerne, der holder det senest gemte data samt id, der kan sendes 
 typedef struct struct_message2 {
   int id; //Den er unik for hver sender med ESP NOW
   int button1Data = 0;
@@ -64,7 +65,7 @@ void setup() {
     return;
   }
 
-  //Når ESP NOW er successfuldt initialiseret, registrer callback funktionen, der sendes
+  //Når ESP-NOW er successfuldt initialiseret, registrer callback funktionen, der sendes
   esp_now_register_send_cb(esp_now_send_cb_t(OnDataSent));
   
   //Registrer paringsenheden
@@ -83,6 +84,7 @@ void loop() {
   //Det der sendes
   previousState.id = 2; //Ændre til hvilken sender det er. Det er enten 1 eller 2
 
+  //Ved startup, gem et sæt data af knappernes status
   if(start == 1) {
     previousState.button1Data = digitalRead(buttonPin1);
     previousState.button2Data = digitalRead(buttonPin2);
@@ -90,16 +92,17 @@ void loop() {
     previousState.button4Data = digitalRead(buttonPin4);
     previousState.button5Data = digitalRead(buttonPin5);
     
-    start = 0;
+    start = 0; //Sørg for det ikke gentages ved at lave start til false
     }
 
-    myData.button1Data = digitalRead(buttonPin1);
-    myData.button2Data = digitalRead(buttonPin2);
-    myData.button3Data = digitalRead(buttonPin3);
-    myData.button4Data = digitalRead(buttonPin4);
-    myData.button5Data = digitalRead(buttonPin5);
+  //Læs nye data fra knapperne konstant
+  myData.button1Data = digitalRead(buttonPin1);
+  myData.button2Data = digitalRead(buttonPin2);
+  myData.button3Data = digitalRead(buttonPin3);
+  myData.button4Data = digitalRead(buttonPin4);
+  myData.button5Data = digitalRead(buttonPin5);
 
-
+  //Tjek om der sker en ændring af knappernes status og gem det
   if(myData.button1Data != previousState.button1Data || myData.button2Data != previousState.button2Data || myData.button3Data != previousState.button3Data || myData.button4Data != previousState.button4Data || myData.button5Data != previousState.button5Data) {
     previousState.button1Data = myData.button1Data;
     previousState.button2Data = myData.button2Data;
@@ -107,7 +110,7 @@ void loop() {
     previousState.button4Data = myData.button4Data;
     previousState.button5Data = myData.button5Data;
 
-    //Print data i egen konsol
+   //Print gemt data i egen konsol
    Serial.print(previousState.button1Data);
    Serial.print(",");
    Serial.print(previousState.button2Data);
@@ -119,7 +122,7 @@ void loop() {
    Serial.print(previousState.button5Data);
    Serial.print(" ");
     
-    //Send beskeden via ESP NOW
+    //Send beskeden med gemt data via ESP NOW
     esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &previousState, sizeof(previousState));
 
     if (result == ESP_OK) {
