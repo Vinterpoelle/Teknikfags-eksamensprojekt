@@ -32,21 +32,21 @@ typedef struct struct_message {
 //Gem strukturen i variablen previousState
 struct_message previousState;
 
-//Dette holder strukturen med data fra alle boards
+//Her laves der variabler, som holder data for hver sender
 struct_message board1;
 struct_message board2;
 struct_message board3;
 
-//
+//Laver et array med strukturne
 struct_message boardsStruct[3] = {{board1}, {board2}, {board3}};
 
+//Booleans for om knapperne er trykket
 bool button1Pressed = 0;
 bool button2Pressed = 0;
 bool button3Pressed = 0;
 bool button4Pressed = 0;
 bool button5Pressed = 0;
 
-//consol2 knapper
 bool button6Pressed = 0;
 bool button7Pressed = 0;
 bool button8Pressed = 0;
@@ -54,7 +54,7 @@ bool button9Pressed = 0;
 bool button10Pressed = 0;
 
 
-// callback function that will be executed when data is received
+//Callback funktion der bliver udført når data er modtaget
 void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) {
   char macStr[18];
   Serial.print("Packet received from: ");
@@ -65,20 +65,20 @@ void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) 
   Serial.printf("Board ID %u: %u bytes\n", previousState.id, len);
 
   
-  // Update the structures with the new incoming data
+  //Opdater med det nye data
   boardsStruct[previousState.id-1].button1Data = previousState.button1Data;
   boardsStruct[previousState.id-1].button2Data = previousState.button2Data;
   boardsStruct[previousState.id-1].button3Data = previousState.button3Data;
   boardsStruct[previousState.id-1].button4Data = previousState.button4Data;
   boardsStruct[previousState.id-1].button5Data = previousState.button5Data;
-  // update secound
+  
   boardsStruct[previousState.id-1].button1Data = previousState.button1Data;
   boardsStruct[previousState.id-1].button2Data = previousState.button2Data;
   boardsStruct[previousState.id-1].button3Data = previousState.button3Data;
   boardsStruct[previousState.id-1].button4Data = previousState.button4Data;
   boardsStruct[previousState.id-1].button5Data = previousState.button5Data;
 
-
+  //Print data i konsollen
   Serial.printf("Button 1: %d \n", boardsStruct[previousState.id-1].button1Data);
   Serial.printf("Button 2: %d \n", boardsStruct[previousState.id-1].button2Data);
   Serial.printf("Button 3: %d \n", boardsStruct[previousState.id-1].button3Data);
@@ -95,30 +95,31 @@ void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) 
 }
  
 void setup() {
-  //Initialize Serial Monitor
+  //Initialiser Serial Monitor
   Serial.begin(115200);
 
+  //Initialiser Neopixel
   pixels.begin();
   pixels2.begin();
 
-  //Set device as a Wi-Fi Station
+  //Sæt enheden som en Wi-Fi Station
   WiFi.mode(WIFI_STA);
 
-  //Init ESP-NOW
+  //Initialiser ESP-NOW
   if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
     return;
   }
   
-  // Once ESPNow is successfully Init, we will register for recv CB to
-  // get recv packer info
+  //Registrer en callback funktion, når data er modtaget
   esp_now_register_recv_cb(esp_now_recv_cb_t(OnDataRecv));
 
+  //Forsøg på at holde lyset slukket ved start
   start();
 }
 
 void loop() {
-  // Acess the variables for each board
+  //Variabler for hver boards data
   int board1X = boardsStruct[0].button1Data;
   int board1Y = boardsStruct[0].button2Data;
   int board1Z = boardsStruct[0].button3Data;
@@ -131,7 +132,7 @@ void loop() {
   int board2W = boardsStruct[1].button4Data;
   int board2Q = boardsStruct[1].button5Data;
 
-//button things
+  //Tænder lys og giver besked om knappen er trykket, når den er trykkket
   if(board1X == 0 && button1Pressed == 0) {
     button1Pressed = 1;
     button1();
@@ -182,7 +183,7 @@ if(board2X == 0 && button6Pressed == 0) {
     button10();
   }
 
-
+  //Når knappen slippes, så nulstilles buttonPressed variablen til false
   if(board1X == 1) {
     button1Pressed = 0;
     start1 = 0;
@@ -232,36 +233,35 @@ if(board2X == 0 && button6Pressed == 0) {
     button10Pressed = 0;
     start1 = 0;
   }
-  //delay(1000);
 }
 
+//Starter med alle lys slukket ved at løbe gennem begge array for lysene og sætter dem til color1 (slukket)
 void start() {
    for(int i=0; i<=17; i++) { // For each pixel...
-    pixels.setPixelColor(i, color1);
-   
+    pixels.setPixelColor(i, color1); 
    }
    for(int i=0; i<=30; i++) { // For each pixel...
-   
     pixels2.setPixelColor(i, color1);
    }
 
-
+  //Sørg for det vises
   pixels.show();
   pixels2.show();
 }
 
+//Nedenstående er knappernes funktioner for, hvad der tænder og slukker
 void button1(){
-  //Tændt 2,4,8,12,15
+  //Tænder 2,4,8,12,15
   pixels.setPixelColor(4, color2);
   pixels.setPixelColor(2, color2);
   pixels.setPixelColor(8, color2);
   pixels.setPixelColor(15, color2);
   pixels.setPixelColor(11, color2);
 
-  //Slukket 11,16
+  //Slukker 11,16
   pixels.setPixelColor(11, color1);
   pixels.setPixelColor(16, color1);
-    pixels.setPixelColor(17, color1);
+  pixels.setPixelColor(17, color1);
   pixels.setPixelColor(25, color1);
 
   pixels.show();
@@ -273,7 +273,7 @@ void button2(){
   pixels.setPixelColor(15, color2);
   pixels.setPixelColor(9, color2);
   pixels.setPixelColor(23, color2);
-    pixels.setPixelColor(4, color2);
+  pixels.setPixelColor(4, color2);
   pixels.setPixelColor(10, color2);
 
   //Slukker 4,16
@@ -286,34 +286,36 @@ void button2(){
 }
 
 void button3(){
-  //tænt 1,7,10,14
+  //Tænder 1,7,10,14
   pixels.setPixelColor(1, color2);
   pixels.setPixelColor(10, color2);
   pixels.setPixelColor(2, color2);
-   pixels.setPixelColor(8, color2);
-     pixels.setPixelColor(15, color2);
+  pixels.setPixelColor(8, color2);
+  pixels.setPixelColor(15, color2);
   pixels.setPixelColor(16, color2);
-      pixels.setPixelColor(22, color2);
-         pixels.setPixelColor(4, color2);
+  pixels.setPixelColor(22, color2);
+  pixels.setPixelColor(4, color2);
   pixels.setPixelColor(18, color2);
-  // slukket 9,11,12,15
+  
+  //Slukker 9,11,12,15
   pixels.setPixelColor(9, color1);
   pixels.setPixelColor(11, color1);
   pixels.setPixelColor(15, color1);
   pixels.setPixelColor(24, color1);
-   pixels.setPixelColor(18, color1);
-    pixels.setPixelColor(2, color1);
-   pixels.show();
+  pixels.setPixelColor(18, color1);
+  pixels.setPixelColor(2, color1);
+  pixels.show();
 }
 void button4(){
-  //tænt 6,9,12,13,16
+  //Tænder 6,9,12,13,16
   pixels.setPixelColor(9, color2);
   pixels.setPixelColor(16, color2);
   pixels.setPixelColor(17, color2);
   pixels.setPixelColor(3, color2);
   pixels.setPixelColor(18, color2);
   pixels.setPixelColor(22, color2);
-  //slukket 1,4,8,11,23
+
+  //Slukker 1,4,8,11,23
   pixels.setPixelColor(8, color1);
   pixels.setPixelColor(11, color1);
   pixels.setPixelColor(1, color1);
@@ -322,134 +324,125 @@ void button4(){
   pixels.show();
 }
 void button5(){
-  //tænd 2,3,11,15,16,18,22
+  //Tænder 2,3,11,15,16,18,22
   pixels.setPixelColor(3, color2);
   pixels.setPixelColor(2, color2);
   pixels.setPixelColor(15, color2);
   pixels.setPixelColor(16, color2);
   pixels.setPixelColor(11, color2);
   pixels.setPixelColor(24, color2);
-    pixels.setPixelColor(9, color2);
+  pixels.setPixelColor(9, color2);
   pixels.setPixelColor(22, color2);
   pixels.setPixelColor(18, color2);
   pixels.show();
 }
 
-
-
-
-
-
-
-
-
-//buttons2
-
-
-
-
-
 void button6()
 {
-  //tænt 1,3,5,8,9,10,14,15,20,22
+  //Tænder 1,3,5,8,9,10,14,15,20,22
   pixels2.setPixelColor(6, color3);
   pixels2.setPixelColor(21, color3);
   pixels2.setPixelColor(3, color3);
   pixels2.setPixelColor(22, color3);
   pixels2.setPixelColor(5, color3);
-    pixels2.setPixelColor(14, color3);
+  pixels2.setPixelColor(14, color3);
   pixels2.setPixelColor(15, color3);
-    pixels2.setPixelColor(4, color3);
+  pixels2.setPixelColor(4, color3);
   pixels2.setPixelColor(1, color3);
   pixels2.setPixelColor(11, color3);
   pixels2.setPixelColor(2, color3);
-  //slukket 0,2,3,4,7,26
+
+  //Slukker 0,2,3,4,7,26
   pixels2.setPixelColor(26, color1);
   pixels2.setPixelColor(4, color1);
   pixels2.show();
 }
+
 void button7()
 {
-  //tænt 1,7,8,10,11,13,16,17,18,19,28
+  //Tænder 1,7,8,10,11,13,16,17,18,19,28
   pixels2.setPixelColor(27, color3);
   pixels2.setPixelColor(7, color3);
   pixels2.setPixelColor(1, color3);
   pixels2.setPixelColor(14, color3);
-    pixels2.setPixelColor(11, color3);
+  pixels2.setPixelColor(11, color3);
   pixels2.setPixelColor(17, color3);
-   pixels2.setPixelColor(21, color3);
+  pixels2.setPixelColor(21, color3);
   pixels2.setPixelColor(3, color3);
-   pixels2.setPixelColor(24, color3);
+  pixels2.setPixelColor(24, color3);
   pixels2.setPixelColor(22, color3);
   pixels2.setPixelColor(5, color3);
-        pixels2.setPixelColor(13, color3);
+  pixels2.setPixelColor(13, color3);
 
-  //slukket 6,9,12,15,16,18,22
+  //Slukker 6,9,12,15,16,18,22
   pixels2.setPixelColor(6, color1);
   pixels2.setPixelColor(15, color1);
   pixels2.setPixelColor(23, color1);
   pixels2.setPixelColor(26, color1);
   pixels2.setPixelColor(1, color1);
-    pixels2.setPixelColor(13, color1);
+  pixels2.setPixelColor(13, color1);
   pixels2.show();
 }
+
 void button8()
 {
-  //tænt 2,12,13,16,18
+  //Tænder 2,12,13,16,18
   pixels2.setPixelColor(16, color3);
   pixels2.setPixelColor(13, color3);
   pixels2.setPixelColor(17, color3);
   pixels2.setPixelColor(24, color3);
   pixels2.setPixelColor(12, color3);
-   pixels2.setPixelColor(3, color3);
+  pixels2.setPixelColor(3, color3);
   pixels2.setPixelColor(2, color3);
   pixels2.setPixelColor(27, color3);
   pixels2.setPixelColor(7, color3);
   pixels2.setPixelColor(1, color3);
-      pixels2.setPixelColor(13, color3);
-  //slukket 5,10,14,17,20,23,28
+  pixels2.setPixelColor(13, color3);
+
+  //Slukker 5,10,14,17,20,23,28
   pixels2.setPixelColor(5, color1);
   pixels2.setPixelColor(11, color1);
   pixels2.setPixelColor(21, color1);
   pixels2.setPixelColor(14, color1);
   pixels2.setPixelColor(23, color1);
-   pixels2.setPixelColor(3, color3);
+  pixels2.setPixelColor(3, color3);
   pixels2.show();
 }
+
 void button9()
 {
-  //tænt 4,21,23,25,26
+  //Tænder 4,21,23,25,26
   pixels2.setPixelColor(21, color3);
   pixels2.setPixelColor(4, color3);
   pixels2.setPixelColor(23, color3);
   pixels2.setPixelColor(26, color3);
-    pixels2.setPixelColor(11, color3);
-
+  pixels2.setPixelColor(11, color3);
   pixels2.show();
 }
 void button10()
 {
-  //tænt 0,6,24,27,29
+  //Tænder 0,6,24,27,29
   pixels2.setPixelColor(24, color3);
   pixels2.setPixelColor(27, color3);
   pixels2.setPixelColor(6, color3);
-    pixels2.setPixelColor(17, color3);
-    pixels2.setPixelColor(7, color3);
+  pixels2.setPixelColor(17, color3);
+  pixels2.setPixelColor(7, color3);
   pixels2.setPixelColor(1, color3);
   pixels2.setPixelColor(22, color3);
   pixels2.setPixelColor(12, color3);
-        pixels2.setPixelColor(2, color3);
-    pixels2.setPixelColor(3, color3);
-      pixels2.setPixelColor(25, color3);
- pixels2.setPixelColor(16, color3);
-  //slukket 1,8,11,13,19,21,24,25,27,29
+  pixels2.setPixelColor(2, color3);
+  pixels2.setPixelColor(3, color3);
+  pixels2.setPixelColor(25, color3);
+  pixels2.setPixelColor(16, color3);
+
+  //Slukker 1,8,11,13,19,21,24,25,27,29
   pixels2.setPixelColor(13, color1);
   pixels2.setPixelColor(21, color1);
-    pixels2.setPixelColor(17, color1);
+  pixels2.setPixelColor(17, color1);
   pixels2.setPixelColor(7, color1);
   pixels2.setPixelColor(13, color1);
   pixels2.setPixelColor(24, color1);
-    pixels2.setPixelColor(22, color1);
+  pixels2.setPixelColor(22, color1);
   pixels2.setPixelColor(1, color1);
   pixels2.setPixelColor(11, color1);
   pixels2.show();
