@@ -12,14 +12,14 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 #define NUMPIXELS2 30
 Adafruit_NeoPixel pixels2(NUMPIXELS2, PIN2, NEO_GRB + NEO_KHZ800);
 
+//Bestemmelse af farve 
 uint32_t color1 = pixels.Color(0,0,0);
 uint32_t color2 = pixels.Color(64,0,0);
 uint32_t color3 = pixels.Color(0,0,64);
 
 bool start1 = 1;
 
-// Structure example to receive data
-// Must match the sender structure
+//Struktur med variabler af data, der skal 
 typedef struct struct_message {
   int id;
   int button1Data = 0;
