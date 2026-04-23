@@ -13,16 +13,27 @@ int buttonPin5 = 21; //Kan ændres ift. hvilken pin
 
 //Struktur med variabler, der kan sendes til recieveren
 typedef struct struct_message {
-    int id; //Den er unik for hver sender med ESP NOW
-    int button1Data = 0;
-    int button2Data = 0;
-    int button3Data = 0;
-    int button4Data = 0;
-    int button5Data = 0;
+  int button1Data = 0;
+  int button2Data = 0;
+  int button3Data = 0;
+  int button4Data = 0;
+  int button5Data = 0;
 } struct_message;
+
+typedef struct struct_message2 {
+  int id; //Den er unik for hver sender med ESP NOW
+  int button1Data = 0;
+  int button2Data = 0;
+  int button3Data = 0;
+  int button4Data = 0;
+  int button5Data = 0;
+} struct_message2;
 
 //Strukturen bliver gemt i variablen myData
 struct_message myData;
+struct_message2 previousState;
+
+bool start = 1;
 
 //Laver variabel til at gemme paringsenhedens data
 esp_now_peer_info_t peerInfo;
@@ -70,33 +81,54 @@ void setup() {
  
 void loop() {
   //Det der sendes
-  myData.id = 2; //Ændre til hvilken sender det er. Det er enten 1 eller 2
-  myData.button1Data = digitalRead(buttonPin1);
-  myData.button2Data = digitalRead(buttonPin2);
-  myData.button3Data = digitalRead(buttonPin3);
-  myData.button4Data = digitalRead(buttonPin4);
-  myData.button5Data = digitalRead(buttonPin5);
+  previousState.id = 2; //Ændre til hvilken sender det er. Det er enten 1 eller 2
 
-  //Send beskeden via ESP NOW
-  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
-   
-   //Print data i egen konsol
-   Serial.print(myData.button1Data);
-   Serial.print(",");
-   Serial.print(myData.button2Data);
-   Serial.print(" ");
-   Serial.print(myData.button3Data);
-   Serial.print(",");
-   Serial.print(myData.button4Data);
-   Serial.print(" ");
-   Serial.print(myData.button5Data);
-   Serial.print(" ");
+  if(start == 1) {
+    previousState.button1Data = digitalRead(buttonPin1);
+    previousState.button2Data = digitalRead(buttonPin2);
+    previousState.button3Data = digitalRead(buttonPin3);
+    previousState.button4Data = digitalRead(buttonPin4);
+    previousState.button5Data = digitalRead(buttonPin5);
+    
+    start = 0;
+    }
 
-  if (result == ESP_OK) {
+    myData.button1Data = digitalRead(buttonPin1);
+    myData.button2Data = digitalRead(buttonPin2);
+    myData.button3Data = digitalRead(buttonPin3);
+    myData.button4Data = digitalRead(buttonPin4);
+    myData.button5Data = digitalRead(buttonPin5);
+
+
+  if(myData.button1Data != previousState.button1Data || myData.button2Data != previousState.button2Data || myData.button3Data != previousState.button3Data || myData.button4Data != previousState.button4Data || myData.button5Data != previousState.button5Data) {
+    previousState.button1Data = myData.button1Data;
+    previousState.button2Data = myData.button2Data;
+    previousState.button3Data = myData.button3Data;
+    previousState.button4Data = myData.button4Data;
+    previousState.button5Data = myData.button5Data;
+
+    //Print data i egen konsol
+   Serial.print(previousState.button1Data);
+   Serial.print(",");
+   Serial.print(previousState.button2Data);
+   Serial.print(" ");
+   Serial.print(previousState.button3Data);
+   Serial.print(",");
+   Serial.print(previousState.button4Data);
+   Serial.print(" ");
+   Serial.print(previousState.button5Data);
+   Serial.print(" ");
+    
+    //Send beskeden via ESP NOW
+    esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &previousState, sizeof(previousState));
+
+    if (result == ESP_OK) {
     Serial.println("Sent with success");
+    }
+    else {
+      Serial.println("Error sending the data");
+    }
+
+    delay(50);
   }
-  else {
-    Serial.println("Error sending the data");
-  }
-  delay(1000);
 }
