@@ -19,7 +19,7 @@ uint32_t color3 = pixels.Color(0,0,64);
 
 bool start1 = 1;
 
-//Struktur med variabler af data, der skal 
+//Struktur med variabler af data, den får tilsendt
 typedef struct struct_message {
   int id;
   int button1Data = 0;
@@ -27,18 +27,17 @@ typedef struct struct_message {
   int button3Data = 0;
   int button4Data = 0;
   int button5Data = 0;
-  
 }struct_message;
 
-// Create a struct_message called myData
+//Gem strukturen i variablen previousState
 struct_message previousState;
 
-// Create a structure to hold the readings from each board
+//Dette holder strukturen med data fra alle boards
 struct_message board1;
 struct_message board2;
 struct_message board3;
 
-// Create an array with all the structures
+//
 struct_message boardsStruct[3] = {{board1}, {board2}, {board3}};
 
 bool button1Pressed = 0;
